@@ -7,6 +7,8 @@ module "alb" {
   access_logs = {}
   target_groups = []
 
+  subnets = var.subnets
+
   https_listeners = [
     {
       port = 443

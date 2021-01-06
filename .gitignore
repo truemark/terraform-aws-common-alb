@@ -10,6 +10,7 @@ notes.txt
 *.tfstate.backup
 .terraform
 terraform.tfstate.d
+.terraform.lock.hcl
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
