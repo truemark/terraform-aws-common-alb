@@ -77,16 +77,16 @@ module "alb" {
   ]
 }
 
-data "aws_route53_zone" "common" {
+data "aws_route53_zone" "alb" {
   count = contains(["", null], var.zone_name) ? 0 : 1
   name = var.zone_name
 }
 
-resource "aws_route53_record" "common" {
+resource "aws_route53_record" "alb" {
   count = contains(["", null], var.zone_name) ? 0 : 1
   name = var.name
   type = "A"
-  zone_id = data.aws_route53_zone.common[count.index].zone_id
+  zone_id = data.aws_route53_zone.alb[count.index].zone_id
   alias {
     name = module.alb.this_lb_dns_name
     zone_id = module.alb.this_lb_zone_id

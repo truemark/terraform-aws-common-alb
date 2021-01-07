@@ -23,5 +23,5 @@ output "sg_arn" {
 }
 
 output "route53_record_id" {
-  value = aws_route53_record.common.id
+  value = join("", aws_route53_record.alb.*.id)
 }
