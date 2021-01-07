@@ -8,7 +8,7 @@ variable "ssl_policy" {
 
 variable "zone_name" {
   description = "Leave empty to skip creating a route53 record for the ALB"
-  default = null
+  default = ""
 }
 
 variable "vpc_id" {}
