@@ -11,6 +11,12 @@ variable "zone_name" {
   default = null
 }
 
+variable "vpc_id" {}
+
 variable "subnets" {
   type = list(string)
+}
+
+variable "ingress_cidrs" {
+  default = ["0.0.0.0/0"]
 }

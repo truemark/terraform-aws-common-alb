@@ -1,3 +1,39 @@
+resource "aws_security_group" "alb" {
+  name = var.name
+  description = "Controls access to ALB ${var.name}"
+  vpc_id = var.vpc_id
+  tags = {
+    Name = var.name
+  }
+}
+
+resource "aws_security_group_rule" "alb_http" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  cidr_blocks       = var.ingress_cidrs
+  security_group_id = aws_security_group.alb.id
+}
+
+resource "aws_security_group_rule" "alb_https" {
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = var.ingress_cidrs
+  security_group_id = aws_security_group.alb.id
+}
+
+resource "aws_security_group_rule" "alb_egress" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.alb.id
+}
+
 module "alb" {
   source = "terraform-aws-modules/alb/aws"
   version = "~> 5.0"
@@ -8,6 +44,8 @@ module "alb" {
   target_groups = []
 
   subnets = var.subnets
+
+  security_groups = [aws_security_group.alb.id]
 
   https_listeners = [
     {
