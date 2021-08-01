@@ -3,7 +3,7 @@ variable "name" {}
 variable "certificate_arn" {}
 
 variable "ssl_policy" {
-  default = "ELBSecurityPolicy-2016-08"
+  default = "ELBSecurityPolicy-FS-1-2-Res-2020-10"
 }
 
 variable "zone_name" {
@@ -19,4 +19,10 @@ variable "subnets" {
 
 variable "ingress_cidrs" {
   default = ["0.0.0.0/0"]
+}
+
+variable "tags" {
+  description = "A map of tags to add to all resources."
+  type        = map(string)
+  default     = {}
 }

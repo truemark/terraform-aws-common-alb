@@ -1,17 +1,17 @@
 output "lb_zone_id" {
-  value = module.alb.this_lb_zone_id
+  value = module.alb.lb_zone_id
 }
 
 output "lb_dns_name" {
-  value = module.alb.this_lb_dns_name
+  value = module.alb.lb_dns_name
 }
 
 output "lb_arn" {
-  value = module.alb.this_lb_arn
+  value = module.alb.lb_arn
 }
 
 output "lb_id" {
-  value = module.alb.this_lb_id
+  value = module.alb.lb_id
 }
 
 output "sg_id" {

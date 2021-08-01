@@ -2,9 +2,9 @@ resource "aws_security_group" "alb" {
   name = var.name
   description = "Controls access to ALB ${var.name}"
   vpc_id = var.vpc_id
-  tags = {
+  tags = merge(var.tags, {
     Name = var.name
-  }
+  })
 }
 
 resource "aws_security_group_rule" "alb_http" {
@@ -36,7 +36,7 @@ resource "aws_security_group_rule" "alb_egress" {
 
 module "alb" {
   source = "terraform-aws-modules/alb/aws"
-  version = "~> 5.0"
+  version = "~> 6.0"
   name = var.name
   load_balancer_type = "application"
 
@@ -75,6 +75,8 @@ module "alb" {
       }
     }
   ]
+
+  tags = var.tags
 }
 
 data "aws_route53_zone" "alb" {
@@ -88,8 +90,8 @@ resource "aws_route53_record" "alb" {
   type = "A"
   zone_id = data.aws_route53_zone.alb[count.index].zone_id
   alias {
-    name = module.alb.this_lb_dns_name
-    zone_id = module.alb.this_lb_zone_id
+    name = module.alb.lb_dns_name
+    zone_id = module.alb.lb_zone_id
     evaluate_target_health = false
   }
 }
