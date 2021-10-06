@@ -80,15 +80,16 @@ module "alb" {
 }
 
 data "aws_route53_zone" "alb" {
-  count = var.zone_name == "" ? 0 : 1
+  count = var.zone_name == "" || var.zone_id != "" ? 0 : 1
   name = var.zone_name
+  private_zone = var.private_zone
 }
 
 resource "aws_route53_record" "alb" {
-  count = var.zone_name == "" ? 0 : 1
+  count = var.zone_name == "" && var.zone_id == "" ? 0 : 1
   name = var.name
   type = "A"
-  zone_id = data.aws_route53_zone.alb[count.index].zone_id
+  zone_id = var.zone_id != "" ? var.zone_id : data.aws_route53_zone.alb[count.index].zone_id
   alias {
     name = module.alb.lb_dns_name
     zone_id = module.alb.lb_zone_id

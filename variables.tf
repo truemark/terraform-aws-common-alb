@@ -11,6 +11,16 @@ variable "zone_name" {
   default = ""
 }
 
+variable "private_zone" {
+  description = "True if zone_name is a private zone, false if public"
+  default = false
+}
+
+variable "zone_id" {
+  description = "Leave empty to skip creating a route53 record for the ALB. This field overrides values placed in zone_name."
+  default = ""
+}
+
 variable "vpc_id" {}
 
 variable "subnets" {
