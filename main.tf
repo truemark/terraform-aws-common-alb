@@ -39,6 +39,7 @@ module "alb" {
   version = "~> 6.0"
   name = var.name
   load_balancer_type = "application"
+  internal = var.internal
 
   access_logs = {}
   target_groups = []

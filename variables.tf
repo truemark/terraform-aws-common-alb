@@ -45,3 +45,9 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "internal" {
+  description = "Boolean determining if the load balancer is internal or externally facing."
+  type = string
+  default = false
+}
