@@ -51,3 +51,9 @@ variable "internal" {
   type = string
   default = false
 }
+
+variable "create_nlb" {
+  description = "Create a network load balancer to sit in front of the ALB."
+  type = bool
+  default = false
+}

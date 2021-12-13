@@ -97,3 +97,59 @@ resource "aws_route53_record" "alb" {
     evaluate_target_health = false
   }
 }
+
+module "nlb" {
+  count = var.create_nlb ? 1 : 0
+  source  = "terraform-aws-modules/alb/aws"
+  version = "~> 6.0"
+  name = "${var.name}-nlb"
+  load_balancer_type = "network"
+  internal = var.internal
+  subnets = var.subnets
+
+  vpc_id = var.vpc_id
+
+  access_logs = {}
+
+  target_groups = [
+    {
+      name_prefix      = "http"
+      backend_protocol = "TCP"
+      backend_port     = 80
+      target_type      = "alb"
+      targets = [
+        {
+          target_id = module.alb.lb_id
+          port = 80
+        }
+      ]
+    },
+    {
+      name_prefix       = "https"
+      backend_protocol  = "TCP"
+      backend_port      = 443
+      target_type       = "alb"
+      targets = [
+        {
+          target_id = module.alb.lb_id
+          port = 443
+        }
+      ]
+    }
+  ]
+
+  http_tcp_listeners = [
+    {
+      port               = 80
+      protocol           = "TCP"
+      target_group_index = 0
+    },
+    {
+      port               = 443
+      protocol           = "TCP"
+      target_group_index = 1
+    }
+  ]
+
+  tags = var.tags
+}
