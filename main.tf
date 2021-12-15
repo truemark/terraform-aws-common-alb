@@ -153,3 +153,9 @@ module "nlb" {
 
   tags = var.tags
 }
+
+resource "aws_api_gateway_vpc_link" "nlb" {
+  count = var.create_nlb && var.create_nlb_api_gateway_vpclink ? 1 : 0
+  name        = "${var.name}-nlb"
+  target_arns = [join("", module.nlb.*.lb_arn)]
+}

@@ -32,3 +32,31 @@ output "route53_record_id" {
   description = "The Route53 records for the Application Load Balancer."
   value = join("", aws_route53_record.alb.*.id)
 }
+
+output "nlb_dns_name" {
+  value = join("", module.nlb.*.lb_dns_name)
+}
+
+output "nlb_zone_id" {
+  value = join("", module.nlb.*.lb_zone_id)
+}
+
+output "nlb_arn" {
+  value = join("", module.nlb.*.lb_arn)
+}
+
+output "nlb_id" {
+  value = join("", module.nlb.*.lb_id)
+}
+
+output "nlb_api_gateway_vpc_link_arn" {
+  value = join("", aws_api_gateway_vpc_link.nlb.*.arn)
+}
+
+output "nlb_api_gateway_vpc_link_id" {
+  value = join("", aws_api_gateway_vpc_link.nlb.*.id)
+}
+
+output "nlb_api_gateway_vpc_link_name" {
+  value = join("", aws_api_gateway_vpc_link.nlb.*.name)
+}

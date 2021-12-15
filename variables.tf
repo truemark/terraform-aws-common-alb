@@ -57,3 +57,9 @@ variable "create_nlb" {
   type = bool
   default = false
 }
+
+variable "create_nlb_api_gateway_vpclink" {
+  description = "Create an API Gateway VPC link for the network load balancer."
+  type = bool
+  default = false
+}
