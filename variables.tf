@@ -63,3 +63,9 @@ variable "create_nlb_api_gateway_vpc_link" {
   type = bool
   default = false
 }
+
+variable "idle_timeout" {
+  description = "The time in seconds that the connection is allowed to be idle."
+  type        = number
+  default     = 60
+}
