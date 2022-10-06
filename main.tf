@@ -40,6 +40,7 @@ module "alb" {
   name = var.name
   load_balancer_type = "application"
   internal = var.internal
+  idle_timeout = var.idle_timeout
 
   access_logs = {}
   target_groups = []
