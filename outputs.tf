@@ -1,3 +1,23 @@
+output "http_tcp_listener_arns" {
+  description = "The ARN of the TCP and HTTP load balancer listeners created."
+  value       = module.alb.http_tcp_listner_arns
+}
+
+output "http_tcp_listener_ids" {
+  description = "The IDs of the TCP and HTTP load balancer listeners created."
+  value = module.alb.http_tcp_listener_ids
+}
+
+output "https_listener_arns" {
+  description = "The ARNs of the HTTPS load balancer listeners created."
+  value = module.alb.https_listener_arns
+}
+
+output "https_listener_ids" {
+  description = " The IDs of the load balancer listeners created."
+  value = module.alb.https_listener_ids
+}
+
 output "lb_zone_id" {
   description = "The Availability Zones for the Application Load Balancer."
   value = module.alb.lb_zone_id
