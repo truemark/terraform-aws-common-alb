@@ -1,36 +1,56 @@
+output "http_tcp_listener_arns" {
+  description = "The ARN of the TCP and HTTP load balancer listeners created."
+  value       = module.alb.http_tcp_listner_arns
+}
+
+output "http_tcp_listener_ids" {
+  description = "The IDs of the TCP and HTTP load balancer listeners created."
+  value       = module.alb.http_tcp_listener_ids
+}
+
+output "https_listener_arns" {
+  description = "The ARNs of the HTTPS load balancer listeners created."
+  value       = module.alb.https_listener_arns
+}
+
+output "https_listener_ids" {
+  description = " The IDs of the load balancer listeners created."
+  value       = module.alb.https_listener_ids
+}
+
 output "lb_zone_id" {
   description = "The Availability Zones for the Application Load Balancer."
-  value = module.alb.lb_zone_id
+  value       = module.alb.lb_zone_id
 }
 
 output "lb_dns_name" {
   description = "The DNS name for the Application Load Balancer."
-  value = module.alb.lb_dns_name
+  value       = module.alb.lb_dns_name
 }
 
 output "lb_arn" {
   description = "The ARN of the Application Load Balancer."
-  value = module.alb.lb_arn
+  value       = module.alb.lb_arn
 }
 
 output "lb_id" {
   description = "The id of the Application Load Balancer."
-  value = module.alb.lb_id
+  value       = module.alb.lb_id
 }
 
 output "sg_id" {
   description = "The Security Group ID of the Application Load Balancer."
-  value = aws_security_group.alb.id
+  value       = aws_security_group.alb.id
 }
 
 output "sg_arn" {
   description = "The Security Groups ARN that the Application Load Balancer is to reside within."
-  value = aws_security_group.alb.arn
+  value       = aws_security_group.alb.arn
 }
 
 output "route53_record_id" {
   description = "The Route53 records for the Application Load Balancer."
-  value = join("", aws_route53_record.alb.*.id)
+  value       = join("", aws_route53_record.alb.*.id)
 }
 
 output "nlb_dns_name" {
