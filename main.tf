@@ -1,7 +1,7 @@
 resource "aws_security_group" "alb" {
-  name = var.name
+  name        = var.name
   description = "Controls access to ALB ${var.name}"
-  vpc_id = var.vpc_id
+  vpc_id      = var.vpc_id
   tags = merge(var.tags, {
     Name = var.name
   })
@@ -35,14 +35,14 @@ resource "aws_security_group_rule" "alb_egress" {
 }
 
 module "alb" {
-  source = "terraform-aws-modules/alb/aws"
-  version = "~> 6.0"
-  name = var.name
+  source             = "terraform-aws-modules/alb/aws"
+  version            = "~> 6.0"
+  name               = var.name
   load_balancer_type = "application"
-  internal = var.internal
-  idle_timeout = var.idle_timeout
+  internal           = var.internal
+  idle_timeout       = var.idle_timeout
 
-  access_logs = {}
+  access_logs   = {}
   target_groups = []
 
   subnets = var.subnets
@@ -51,28 +51,28 @@ module "alb" {
 
   https_listeners = [
     {
-      port = 443
-      protocol = "HTTPS"
-      certificate_arn = var.certificate_arn
-      ssl_policy = var.ssl_policy
+      port             = 443
+      protocol         = "HTTPS"
+      certificate_arn  = var.certificate_arn
+      ssl_policy       = var.ssl_policy
       target_group_arn = null
-      action_type = "fixed-response"
+      action_type      = "fixed-response"
       fixed_response = {
         content_type = "text/plain"
         message_body = "ok"
-        status_code = "200"
+        status_code  = "200"
       }
     }
   ]
 
   http_tcp_listeners = [
     {
-      port = 80
-      protocol = "HTTP"
+      port        = 80
+      protocol    = "HTTP"
       action_type = "redirect"
       redirect = {
-        port = "443"
-        protocol = "HTTPS"
+        port        = "443"
+        protocol    = "HTTPS"
         status_code = "HTTP_301"
       }
     }
@@ -82,31 +82,31 @@ module "alb" {
 }
 
 data "aws_route53_zone" "alb" {
-  count = var.zone_name == "" || var.zone_id != "" ? 0 : 1
-  name = var.zone_name
+  count        = var.zone_name == "" || var.zone_id != "" ? 0 : 1
+  name         = var.zone_name
   private_zone = var.private_zone
 }
 
 resource "aws_route53_record" "alb" {
-  count = var.zone_name == "" && var.zone_id == "" ? 0 : 1
-  name = var.name
-  type = "A"
+  count   = var.zone_name == "" && var.zone_id == "" ? 0 : 1
+  name    = var.name
+  type    = "A"
   zone_id = var.zone_id != "" ? var.zone_id : data.aws_route53_zone.alb[count.index].zone_id
   alias {
-    name = module.alb.lb_dns_name
-    zone_id = module.alb.lb_zone_id
+    name                   = module.alb.lb_dns_name
+    zone_id                = module.alb.lb_zone_id
     evaluate_target_health = false
   }
 }
 
 module "nlb" {
-  count = var.create_nlb ? 1 : 0
-  source  = "terraform-aws-modules/alb/aws"
-  version = "~> 6.0"
-  name = "${var.name}-nlb"
+  count              = var.create_nlb ? 1 : 0
+  source             = "terraform-aws-modules/alb/aws"
+  version            = "~> 6.0"
+  name               = "${var.name}-nlb"
   load_balancer_type = "network"
-  internal = var.internal
-  subnets = var.subnets
+  internal           = var.internal
+  subnets            = var.subnets
 
   vpc_id = var.vpc_id
 
@@ -121,19 +121,19 @@ module "nlb" {
       targets = [
         {
           target_id = module.alb.lb_id
-          port = 80
+          port      = 80
         }
       ]
     },
     {
-      name_prefix       = "https"
-      backend_protocol  = "TCP"
-      backend_port      = 443
-      target_type       = "alb"
+      name_prefix      = "https"
+      backend_protocol = "TCP"
+      backend_port     = 443
+      target_type      = "alb"
       targets = [
         {
           target_id = module.alb.lb_id
-          port = 443
+          port      = 443
         }
       ]
     }
@@ -156,7 +156,7 @@ module "nlb" {
 }
 
 resource "aws_api_gateway_vpc_link" "nlb" {
-  count = var.create_nlb && var.create_nlb_api_gateway_vpc_link ? 1 : 0
+  count       = var.create_nlb && var.create_nlb_api_gateway_vpc_link ? 1 : 0
   name        = "${var.name}-nlb"
   target_arns = [join("", module.nlb.*.lb_arn)]
 }
