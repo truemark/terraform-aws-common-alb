@@ -1,6 +1,6 @@
 output "http_tcp_listener_arns" {
   description = "The ARN of the TCP and HTTP load balancer listeners created."
-  value       = module.alb.http_tcp_listner_arns
+  value       = module.alb.http_tcp_listener_arns
 }
 
 output "http_tcp_listener_ids" {
