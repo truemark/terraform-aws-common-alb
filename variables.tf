@@ -71,7 +71,7 @@ variable "idle_timeout" {
 }
 
 variable "access_logs" {
-  description = "A map of s3 buckets for access logs."
+  description = "A map of s3 buckets for access logs. This doesn't create the s3 bucket and if left on the default logging is not enabled."
   type        = map(string)
   default     = {}
 }
