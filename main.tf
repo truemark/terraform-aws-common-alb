@@ -36,14 +36,15 @@ resource "aws_security_group_rule" "alb_egress" {
 
 module "alb" {
   source             = "terraform-aws-modules/alb/aws"
-  version            = "~> 6.0"
+  version            = "~> 8.0"
   name               = var.name
   load_balancer_type = "application"
   internal           = var.internal
   idle_timeout       = var.idle_timeout
 
-  access_logs   = {}
-  target_groups = []
+  access_logs            = {}
+  enable_xff_client_port = var.enable_xff_client_port
+  target_groups          = []
 
   subnets = var.subnets
 

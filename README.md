@@ -39,3 +39,17 @@ module "shared_alb" {
 }
 ```
 
+using access logs
+```hcl
+module "shared_alb" {
+  source  = "truemark/common-alb/aws"
+  certificate_arn = module.infrastructure.private_cert_arn
+  name = "my-shared-alb"
+  subnets = module.infrastructure.private_subnet_ids
+  vpc_id = module.infrastructure.vpc_id
+  access_logs = {
+    bucket = "BucketName"
+  }
+}
+```
+

@@ -69,3 +69,15 @@ variable "idle_timeout" {
   type        = number
   default     = 60
 }
+
+variable "access_logs" {
+  description = "A map of s3 buckets for access logs. This doesn't create the s3 bucket and if left on the default logging is not enabled."
+  type        = map(string)
+  default     = {}
+}
+
+variable "enable_xff_client_port" {
+  description = "Indicates whether the X-Forwarded-For header should preserve the source port that the client used to connect to the load balancer in application load balancers."
+  type        = bool
+  default     = false
+}
