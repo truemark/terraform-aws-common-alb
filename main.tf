@@ -42,7 +42,7 @@ module "alb" {
   internal           = var.internal
   idle_timeout       = var.idle_timeout
 
-  access_logs            = {}
+  access_logs            = var.access_logs
   enable_xff_client_port = var.enable_xff_client_port
   target_groups          = []
 
