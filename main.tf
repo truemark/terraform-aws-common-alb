@@ -1,39 +1,3 @@
-resource "aws_security_group" "alb" {
-  name        = var.name
-  description = "Controls access to ALB ${var.name}"
-  vpc_id      = var.vpc_id
-  tags = merge(var.tags, {
-    Name = var.name
-  })
-}
-
-resource "aws_security_group_rule" "alb_http" {
-  type              = "ingress"
-  from_port         = 80
-  to_port           = 80
-  protocol          = "tcp"
-  cidr_blocks       = var.ingress_cidrs
-  security_group_id = aws_security_group.alb.id
-}
-
-resource "aws_security_group_rule" "alb_https" {
-  type              = "ingress"
-  from_port         = 443
-  to_port           = 443
-  protocol          = "tcp"
-  cidr_blocks       = var.ingress_cidrs
-  security_group_id = aws_security_group.alb.id
-}
-
-resource "aws_security_group_rule" "alb_egress" {
-  type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.alb.id
-}
-
 module "alb" {
   source             = "terraform-aws-modules/alb/aws"
   version            = "~> 8.0"
@@ -49,8 +13,31 @@ module "alb" {
   subnets = var.subnets
   vpc_id  = var.vpc_id
 
-  create_security_group = false
-  security_groups = [aws_security_group.alb.id]
+  security_group_rules = {
+    ingress_all_http = {
+      type        = "ingress"
+      from_port   = 80
+      to_port     = 80
+      protocol    = "tcp"
+      description = "HTTP web traffic"
+      cidr_blocks = var.ingress_cidrs
+    }
+    ingress_all_https = {
+      type        = "ingress"
+      from_port   = 443
+      to_port     = 443
+      protocol    = "tcp"
+      description = "HTTPS web traffic"
+      cidr_blocks = var.ingress_cidrs
+    }
+    egress_all = {
+      type        = "egress"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
 
   https_listeners = [
     {
@@ -105,7 +92,7 @@ resource "aws_route53_record" "alb" {
 module "nlb" {
   count              = var.create_nlb ? 1 : 0
   source             = "terraform-aws-modules/alb/aws"
-  version            = "~> 6.0"
+  version            = "~> 8.0"
   name               = "${var.name}-nlb"
   load_balancer_type = "network"
   internal           = var.internal
@@ -113,7 +100,7 @@ module "nlb" {
 
   vpc_id = var.vpc_id
 
-  access_logs = {}
+  access_logs = var.access_logs
 
   target_groups = [
     {
