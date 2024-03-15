@@ -1,5 +1,9 @@
 variable "name" {
-  description = ""
+  description = "This is the name that will be used for the ALB"
+}
+
+variable "bucket_name" {
+  description = "This is the name for the s3 bucket for load balancer logs."
 }
 
 variable "certificate_arn" {
@@ -80,4 +84,16 @@ variable "enable_xff_client_port" {
   description = "Indicates whether the X-Forwarded-For header should preserve the source port that the client used to connect to the load balancer in application load balancers."
   type        = bool
   default     = false
+}
+
+variable "expiration_days" {
+  description = "The number of days logs are kept before they are deleted."
+  type        = number
+  default     = 30
+}
+
+variable "create_logs" {
+  description = "This can be used to disable the access logs for the load balancer."
+  type        = bool
+  default     = true
 }

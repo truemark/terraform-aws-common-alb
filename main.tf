@@ -42,7 +42,11 @@ module "alb" {
   internal           = var.internal
   idle_timeout       = var.idle_timeout
 
-  access_logs            = var.access_logs
+  access_logs            = {
+    bucket = module.log_bucket[0].s3_bucket_id
+    prefix = "${var.name}-access_logs"
+  }
+
   enable_xff_client_port = var.enable_xff_client_port
   target_groups          = []
 
@@ -105,7 +109,7 @@ resource "aws_route53_record" "alb" {
 module "nlb" {
   count              = var.create_nlb ? 1 : 0
   source             = "terraform-aws-modules/alb/aws"
-  version            = "~> 6.0"
+  version            = "~> 8.0"
   name               = "${var.name}-nlb"
   load_balancer_type = "network"
   internal           = var.internal
@@ -113,7 +117,10 @@ module "nlb" {
 
   vpc_id = var.vpc_id
 
-  access_logs = {}
+  access_logs            = {
+    bucket = module.log_bucket[0].s3_bucket_id
+    prefix = "${var.name}-access_logs"
+  }
 
   target_groups = [
     {
@@ -162,4 +169,37 @@ resource "aws_api_gateway_vpc_link" "nlb" {
   count       = var.create_nlb && var.create_nlb_api_gateway_vpc_link ? 1 : 0
   name        = "${var.name}-nlb"
   target_arns = [join("", module.nlb.*.lb_arn)]
+}
+
+module "log_bucket" {
+  count   = var.create_logs ? 1 : 0
+  source  = "terraform-aws-modules/s3-bucket/aws"
+  version = "~> 3.0"
+
+  bucket_prefix = var.bucket_name
+  acl           = "log-delivery-write"
+
+  # For example only
+  force_destroy = true
+
+  control_object_ownership = true
+  object_ownership         = "ObjectWriter"
+
+  attach_elb_log_delivery_policy = true # Required for ALB logs
+  attach_lb_log_delivery_policy  = true # Required for ALB/NLB logs
+
+  attach_deny_insecure_transport_policy = true
+  attach_require_latest_tls_policy      = true
+
+  lifecycle_rule = [
+    {
+      id      = "log"
+      enabled = true
+      expiration = {
+        days = var.expiration_days
+        }
+    }
+  ]
+
+  tags = var.tags
 }

@@ -47,9 +47,7 @@ module "shared_alb" {
   name = "my-shared-alb"
   subnets = module.infrastructure.private_subnet_ids
   vpc_id = module.infrastructure.vpc_id
-  access_logs = {
-    bucket = "BucketName"
-  }
+  bucket_name = "BucketName"
 }
 ```
 
