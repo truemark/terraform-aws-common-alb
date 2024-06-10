@@ -36,7 +36,7 @@ resource "aws_security_group_rule" "alb_egress" {
 
 module "alb" {
   source             = "terraform-aws-modules/alb/aws"
-  version            = "~> 8.0"
+  version            = "~> 9.9"
   name               = var.name
   load_balancer_type = "application"
   internal           = var.internal
@@ -105,7 +105,7 @@ resource "aws_route53_record" "alb" {
 module "nlb" {
   count              = var.create_nlb ? 1 : 0
   source             = "terraform-aws-modules/alb/aws"
-  version            = "~> 6.0"
+  version            = "~> 9.9"
   name               = "${var.name}-nlb"
   load_balancer_type = "network"
   internal           = var.internal
