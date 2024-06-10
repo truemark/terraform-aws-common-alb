@@ -50,7 +50,7 @@ module "alb" {
   vpc_id  = var.vpc_id
 
   create_security_group = false
-  security_groups = [aws_security_group.alb.id]
+  security_groups       = [aws_security_group.alb.id]
 
   https_listeners = [
     {
